@@ -34,8 +34,15 @@ void dmpDataReady() {
       mpuInterrupt = true;
 }
 
+void pixy_get();
+void imu_get();
+
+int16_t yaw = 0, yaw_plus = 0, yaw_minus = 0;
+
+int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0, tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
+
 void setup() {
-      Serial.begin(9600);
+      Serial.begin(28800);
 
       // IMU
       //  join I2C bus (I2Cdev library doesn't do this automatically)
@@ -90,13 +97,16 @@ void setup() {
 }
 
 void loop() {
-      // imu
-      if (!dmpReady) return;   // if programming failed, don't try to do anything
+      imu_get();
+      pixy_get();
 
-      // read a packet from FIFO
+      Serial.write('a');
+      Serial.write(yaw_plus);
+      Serial.write(yaw_minus);
+      Serial.flush();
+}
+void imu_get(){
       if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {   // Get the Latest packet
-            short yaw = 0, yaw_plus = 0, yaw_minus = 0;
-
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
@@ -104,18 +114,9 @@ void loop() {
             yaw = ypr[0] * 180 / M_PI;
             yaw_plus = yaw > 0 ? yaw : 0;
             yaw_minus = yaw < 0 ? yaw * -1 : 0;
-            /*
-                        Serial.write('a');
-                        Serial.write(yaw_plus);
-                        Serial.write(yaw_minus);
-                        Serial.flush();*/
-            Serial.println(yaw);
       }
-
-      // cam
-      char get_command = 0;
-      int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0, tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
-
+}
+void pixy_get(){
       pixy.ccc.getBlocks();
       if (pixy.ccc.numBlocks) {
             for (int count = 0; count < pixy.ccc.numBlocks; count++) {
