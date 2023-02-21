@@ -37,12 +37,13 @@ void dmpDataReady() {
 void pixy_get();
 void imu_get();
 
-int16_t yaw = 0, yaw_plus = 0, yaw_minus = 0;
+int16_t yaw = 0;
+uint8_t yaw_plus = 0, yaw_minus = 0;
 
 int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0, tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
 
 void setup() {
-      Serial.begin(57600);
+      Serial.begin(28800);
 
       // IMU
       //  join I2C bus (I2Cdev library doesn't do this automatically)
@@ -106,6 +107,7 @@ void loop() {
       Serial.flush();
 }
 void imu_get() {
+      if (!dmpReady) return;
       if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {   // Get the Latest packet
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
