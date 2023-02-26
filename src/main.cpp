@@ -43,7 +43,7 @@ uint8_t yaw_plus = 0, yaw_minus = 0;
 int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0, tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
 
 void setup() {
-      Serial.begin(28800);
+      Serial.begin(38400);
 
       // IMU
       //  join I2C bus (I2Cdev library doesn't do this automatically)
@@ -66,12 +66,12 @@ void setup() {
       }
 
       // supply your own gyro offsets here, scaled for min sensitivity
-      mpu.setXGyroOffset(51);
-      mpu.setYGyroOffset(8);
-      mpu.setZGyroOffset(21);
-      mpu.setXAccelOffset(1150);
-      mpu.setYAccelOffset(-50);
-      mpu.setZAccelOffset(1060);
+      mpu.setXGyroOffset(-30);
+      mpu.setYGyroOffset(9);
+      mpu.setZGyroOffset(-26);
+      mpu.setXAccelOffset(-3146);
+      mpu.setYAccelOffset(-4618);
+      mpu.setZAccelOffset(1878);
 
       // Calibration Time: generate offsets and calibrate our MPU6050
       mpu.CalibrateAccel(6);
