@@ -40,7 +40,7 @@ void imu_get();
 int16_t yaw = 0;
 uint8_t yaw_plus = 0, yaw_minus = 0;
 
-int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0, tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
+int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0;
 
 void setup() {
       Serial.begin(38400);
@@ -104,6 +104,10 @@ void loop() {
       Serial.write('a');
       Serial.write(yaw_plus);
       Serial.write(yaw_minus);
+      Serial.write(yellow_angle);
+      Serial.write(yellow_wide);
+      Serial.write(blue_angle);
+      Serial.write(blue_wide);
       Serial.flush();
 }
 void imu_get() {
@@ -120,6 +124,14 @@ void imu_get() {
 }
 void pixy_get() {
       pixy.ccc.getBlocks();
+      
+      int16_t tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
+
+      yellow_angle = 0;
+      blue_angle = 0;
+      yellow_wide = 0;
+      blue_wide = 0;
+
       if (pixy.ccc.numBlocks) {
             for (int count = 0; count < pixy.ccc.numBlocks; count++) {
                   if (pixy.ccc.blocks[count].m_signature == 1 && pixy.ccc.blocks[count].m_y > 100) {
@@ -130,6 +142,7 @@ void pixy_get() {
                               yellow_wide = tmp_yellow_wide / 5;
                         }
                   }
+
                   if (pixy.ccc.blocks[count].m_signature == 2 && pixy.ccc.blocks[count].m_y > 100) {
                         old_blue_wide = tmp_blue_wide;
                         tmp_blue_wide = pixy.ccc.blocks[count].m_width;
