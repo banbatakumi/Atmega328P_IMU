@@ -15,67 +15,55 @@
 // This sketch is a good place to start if you're just getting started with 
 // Pixy and Arduino.  This program simply prints the detected object blocks 
 // (including color codes) through the serial console.  It uses the Arduino's 
-// ICSP SPI port.  For more information go here:
+// ICSP port.  For more information go here:
 //
-// https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:hooking_up_pixy_to_a_microcontroller_-28like_an_arduino-29
+// http://cmucam.org/projects/cmucam5/wiki/Hooking_up_Pixy_to_a_Microcontroller_(like_an_Arduino)
 //
-
-// Uncomment one of these to enable another type of serial interface
-#define I2C
-//#define UART
-//#define SPI_SS
+// It prints the detected blocks once per second because printing all of the 
+// blocks for all 50 frames per second would overwhelm the Arduino's serial port.
+//
    
-#ifdef I2C
+#include <SPI.h>  
+#include <Pixy.h>
 
-#include <Pixy2I2C.h>
-Pixy2I2C pixy;
-
-#else 
-#ifdef UART
-
-#include <Pixy2UART.h>
-Pixy2UART pixy;
-
-#else 
-#ifdef SPI_SS
-
-#include <Pixy2SPI_SS.h>
-Pixy2SPI_SS pixy;
-
-#else
-
-#include <Pixy2.h>
-Pixy2 pixy;
-
-#endif
-#endif
-#endif
+// This is the main Pixy object 
+Pixy pixy;
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.print("Starting...\n");
-  
+
   pixy.init();
 }
 
 void loop()
 { 
-  int i; 
+  static int i = 0;
+  int j;
+  uint16_t blocks;
+  char buf[32]; 
+  
   // grab blocks!
-  pixy.ccc.getBlocks();
+  blocks = pixy.getBlocks();
   
   // If there are detect blocks, print them!
-  if (pixy.ccc.numBlocks)
+  if (blocks)
   {
-    Serial.print("Detected ");
-    Serial.println(pixy.ccc.numBlocks);
-    for (i=0; i<pixy.ccc.numBlocks; i++)
+    i++;
+    
+    // do this (print) every 50 frames because printing every
+    // frame would bog down the Arduino
+    if (i%50==0)
     {
-      Serial.print("  block ");
-      Serial.print(i);
-      Serial.print(": ");
-      pixy.ccc.blocks[i].print();
+      sprintf(buf, "Detected %d:\n", blocks);
+      Serial.print(buf);
+      for (j=0; j<blocks; j++)
+      {
+        sprintf(buf, "  block %d: ", j);
+        Serial.print(buf); 
+        pixy.blocks[j].print();
+      }
     }
   }  
 }

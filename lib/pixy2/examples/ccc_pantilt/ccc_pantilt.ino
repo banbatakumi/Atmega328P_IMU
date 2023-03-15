@@ -14,7 +14,7 @@
 //
 
 #include <Pixy2.h>
-#include "PIDLoop.h"
+#include <PIDLoop.h>
 
 Pixy2 pixy;
 PIDLoop panLoop(400, 0, 400, true);
