@@ -156,12 +156,8 @@ void pixy_get() {
 }
 
 */
- #include <PixyI2C.h>
-
  #include "Arduino.h"
  #include "MPU6050_6Axis_MotionApps612.h"
-
- PixyI2C pixy;
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include "Wire.h"
@@ -249,15 +245,11 @@ void pixy_get() {
        // get expected DMP packet size for later comparison
        packetSize = mpu.dmpGetFIFOPacketSize();
 
-       // cam
-       pixy.init();
-
        TIMSK0 = 0;
  }
 
  void loop() {
        imu_get();
-       pixy_get();
 
        Serial.write('a');
        Serial.write(yaw_plus);
@@ -278,41 +270,5 @@ void pixy_get() {
              yaw = ypr[0] * 180 / M_PI;
              yaw_plus = yaw > 0 ? yaw : 0;
              yaw_minus = yaw < 0 ? yaw * -1 : 0;
-       }
- }
- void pixy_get() {
-       pixy.getBlocks();
-
-
-       uint16_t blocks;
-
-       blocks = pixy.getBlocks();
-
-       if (blocks) {
-             int16_t tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
-
-             yellow_angle = 0;
-             blue_angle = 0;
-             yellow_wide = 0;
-             blue_wide = 0;
-             for (int count = 0; count < blocks; count++) {
-                   if (pixy.blocks[count].signature == 1 && pixy.blocks[count].y > 100) {
-                         old_yellow_wide = tmp_yellow_wide;
-                         tmp_yellow_wide = pixy.blocks[count].width;
-                         if (tmp_yellow_wide > old_yellow_wide) {
-                               yellow_angle = pixy.blocks[count].x / 1.5;
-                               yellow_wide = tmp_yellow_wide / 5;
-                         }
-                   }
-
-                   if (pixy.blocks[count].signature == 2 && pixy.blocks[count].y > 100) {
-                         old_blue_wide = tmp_blue_wide;
-                         tmp_blue_wide = pixy.blocks[count].width;
-                         if (tmp_blue_wide > old_blue_wide) {
-                               blue_angle = pixy.blocks[count].x / 1.5;
-                               blue_wide = tmp_blue_wide / 5;
-                         }
-                   }
-             }
        }
  }
