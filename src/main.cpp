@@ -1,4 +1,4 @@
-/*#include "Arduino.h"
+#include "Arduino.h"
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps612.h"
 #include "Pixy2I2C.h"
@@ -40,7 +40,7 @@ void imu_get();
 int16_t yaw = 0;
 uint8_t yaw_plus = 0, yaw_minus = 0;
 
-int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0;
+int16_t yellow_angle = 0, blue_angle = 0, yellow_height = 0, blue_height = 0;
 
 void setup() {
       Serial.begin(38400);
@@ -67,10 +67,10 @@ void setup() {
 
       // supply your own gyro offsets here, scaled for min sensitivity
       mpu.setXGyroOffset(-30);
-      mpu.setYGyroOffset(9);
-      mpu.setZGyroOffset(-26);
-      mpu.setXAccelOffset(-3146);
-      mpu.setYAccelOffset(-4618);
+      mpu.setYGyroOffset(10);
+      mpu.setZGyroOffset(-27);
+      mpu.setXAccelOffset(-3136);
+      mpu.setYAccelOffset(-4636);
       mpu.setZAccelOffset(1878);
 
       // Calibration Time: generate offsets and calibrate our MPU6050
@@ -105,9 +105,9 @@ void loop() {
       Serial.write(yaw_plus);
       Serial.write(yaw_minus);
       Serial.write(yellow_angle);
-      Serial.write(yellow_wide);
+      Serial.write(yellow_height);
       Serial.write(blue_angle);
-      Serial.write(blue_wide);
+      Serial.write(blue_height);
       Serial.flush();
 }
 void imu_get() {
@@ -125,37 +125,37 @@ void imu_get() {
 void pixy_get() {
       pixy.ccc.getBlocks();
 
-      int16_t tmp_yellow_wide = 0, tmp_blue_wide = 0, old_yellow_wide = 0, old_blue_wide = 0;
+      int16_t tmp_yellow_height = 0, tmp_blue_height = 0, old_yellow_height = 0, old_blue_height = 0;
 
       yellow_angle = 0;
       blue_angle = 0;
-      yellow_wide = 0;
-      blue_wide = 0;
+      yellow_height = 0;
+      blue_height = 0;
 
       if (pixy.ccc.numBlocks) {
             for (int count = 0; count < pixy.ccc.numBlocks; count++) {
                   if (pixy.ccc.blocks[count].m_signature == 1 && pixy.ccc.blocks[count].m_y > 100) {
-                        old_yellow_wide = tmp_yellow_wide;
-                        tmp_yellow_wide = pixy.ccc.blocks[count].m_width;
-                        if (tmp_yellow_wide > old_yellow_wide) {
+                        old_yellow_height = tmp_yellow_height;
+                        tmp_yellow_height = pixy.ccc.blocks[count].m_height;
+                        if (tmp_yellow_height > old_yellow_height) {
                               yellow_angle = pixy.ccc.blocks[count].m_x / 1.5;
-                              yellow_wide = tmp_yellow_wide / 5;
+                              yellow_height = tmp_yellow_height / 1.5;
                         }
                   }
 
                   if (pixy.ccc.blocks[count].m_signature == 2 && pixy.ccc.blocks[count].m_y > 100) {
-                        old_blue_wide = tmp_blue_wide;
-                        tmp_blue_wide = pixy.ccc.blocks[count].m_width;
-                        if (tmp_blue_wide > old_blue_wide) {
+                        old_blue_height = tmp_blue_height;
+                        tmp_blue_height = pixy.ccc.blocks[count].m_height;
+                        if (tmp_blue_height > old_blue_height) {
                               blue_angle = pixy.ccc.blocks[count].m_x / 1.5;
-                              blue_wide = tmp_blue_wide / 5;
+                              blue_height = tmp_blue_height / 1.5;
                         }
                   }
             }
       }
 }
 
-*/
+/*
  #include "Arduino.h"
  #include "MPU6050_6Axis_MotionApps612.h"
 
@@ -194,7 +194,7 @@ void pixy_get() {
  int16_t yaw = 0;
  uint8_t yaw_plus = 0, yaw_minus = 0;
 
- int16_t yellow_angle = 0, blue_angle = 0, yellow_wide = 0, blue_wide = 0;
+ int16_t yellow_angle = 0, blue_angle = 0, yellow_height = 0, blue_height = 0;
 
  void setup() {
        Serial.begin(38400);
@@ -255,9 +255,9 @@ void pixy_get() {
        Serial.write(yaw_plus);
        Serial.write(yaw_minus);
        Serial.write(yellow_angle);
-       Serial.write(yellow_wide);
+       Serial.write(yellow_height);
        Serial.write(blue_angle);
-       Serial.write(blue_wide);
+       Serial.write(blue_height);
        Serial.flush();
  }
  void imu_get() {
@@ -271,4 +271,4 @@ void pixy_get() {
              yaw_plus = yaw > 0 ? yaw : 0;
              yaw_minus = yaw < 0 ? yaw * -1 : 0;
        }
- }
+ }*/
