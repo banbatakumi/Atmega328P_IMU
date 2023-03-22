@@ -125,7 +125,7 @@ void imu_get() {
 void pixy_get() {
       pixy.ccc.getBlocks();
 
-      int16_t tmp_yellow_height = 0, tmp_blue_height = 0, old_yellow_height = 0, old_blue_height = 0;
+      int16_t tmp_yellow_height = 0, tmp_blue_height = 0;
 
       yellow_angle = 0;
       blue_angle = 0;
@@ -135,21 +135,15 @@ void pixy_get() {
       if (pixy.ccc.numBlocks) {
             for (int count = 0; count < pixy.ccc.numBlocks; count++) {
                   if (pixy.ccc.blocks[count].m_signature == 1 && pixy.ccc.blocks[count].m_y > 100) {
-                        old_yellow_height = tmp_yellow_height;
                         tmp_yellow_height = pixy.ccc.blocks[count].m_height;
-                        if (tmp_yellow_height > old_yellow_height) {
-                              yellow_angle = pixy.ccc.blocks[count].m_x / 1.5;
-                              yellow_height = tmp_yellow_height / 1.5;
-                        }
+                        yellow_angle = pixy.ccc.blocks[count].m_x / 1.5;
+                        yellow_height = tmp_yellow_height / 1.5;
                   }
 
                   if (pixy.ccc.blocks[count].m_signature == 2 && pixy.ccc.blocks[count].m_y > 100) {
-                        old_blue_height = tmp_blue_height;
                         tmp_blue_height = pixy.ccc.blocks[count].m_height;
-                        if (tmp_blue_height > old_blue_height) {
-                              blue_angle = pixy.ccc.blocks[count].m_x / 1.5;
-                              blue_height = tmp_blue_height / 1.5;
-                        }
+                        blue_angle = pixy.ccc.blocks[count].m_x / 1.5;
+                        blue_height = tmp_blue_height / 1.5;
                   }
             }
       }
