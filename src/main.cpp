@@ -1,4 +1,4 @@
-#include "Arduino.h"
+/*#include "Arduino.h"
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps612.h"
 #include "Pixy2I2C.h"
@@ -66,12 +66,12 @@ void setup() {
       }
 
       // supply your own gyro offsets here, scaled for min sensitivity
-      mpu.setXGyroOffset(-30);
-      mpu.setYGyroOffset(10);
+      mpu.setXGyroOffset(-25);
+      mpu.setYGyroOffset(11);
       mpu.setZGyroOffset(-27);
-      mpu.setXAccelOffset(-3136);
-      mpu.setYAccelOffset(-4636);
-      mpu.setZAccelOffset(1878);
+      mpu.setXAccelOffset(-3150);
+      mpu.setYAccelOffset(-4620);
+      mpu.setZAccelOffset(1872);
 
       // Calibration Time: generate offsets and calibrate our MPU6050
       mpu.CalibrateAccel(6);
@@ -147,9 +147,9 @@ void pixy_get() {
                   }
             }
       }
-}
+}*/
 
-/*
+
  #include "Arduino.h"
  #include "MPU6050_6Axis_MotionApps612.h"
 
@@ -214,12 +214,12 @@ void pixy_get() {
        }
 
        // supply your own gyro offsets here, scaled for min sensitivity
-       mpu.setXGyroOffset(-30);
-       mpu.setYGyroOffset(9);
-       mpu.setZGyroOffset(-26);
-       mpu.setXAccelOffset(-3146);
-       mpu.setYAccelOffset(-4618);
-       mpu.setZAccelOffset(1878);
+       mpu.setXGyroOffset(-29);
+       mpu.setYGyroOffset(7);
+       mpu.setZGyroOffset(-14);
+       mpu.setXAccelOffset(-3412);
+       mpu.setYAccelOffset(340);
+       mpu.setZAccelOffset(556);
 
        // Calibration Time: generate offsets and calibrate our MPU6050
        mpu.CalibrateAccel(6);
@@ -265,4 +265,4 @@ void pixy_get() {
              yaw_plus = yaw > 0 ? yaw : 0;
              yaw_minus = yaw < 0 ? yaw * -1 : 0;
        }
- }*/
+ }
