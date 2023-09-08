@@ -191,7 +191,7 @@ void pixy_get() {
  int16_t yellow_angle = 0, blue_angle = 0, yellow_height = 0, blue_height = 0;
 
  void setup() {
-       Serial.begin(38400);
+       Serial.begin(115200);
 
        // IMU
        //  join I2C bus (I2Cdev library doesn't do this automatically)
